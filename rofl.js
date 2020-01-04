@@ -1,40 +1,41 @@
 const http = require('http')
 
 function syntax(message) {
-    function roflMessage(msg) {
-        return new Promise((resolve, reject) => {
-            if(typeof msg == 'string' ){
-                let req = http.request( encodeURI('http://www.aot.ru/cgi-bin/redirectd.py?port=17017&action=syntax&langua=Russian&query=' + msg), (res) => {
-                    var str = ""
-                    if(res.statusCode == 200) { 
-                        res.on('data', data => {
-                            str += data
-                        })
-                        res.on('end', () => {
-                            try{
-                                resolve(JSON.parse(str))
-                            } catch(e) {
-                                resolve(null)
-                            }
-                        })
-                    } else { 
-                        console.error("status code != 200") 
-                        resolve(null) 
-                    }
-                })
-                req.end()
-            } else {
-                console.error("msg != string")
-                resolve(null)
-            }
-        })
-    
-    }
+    return new Promise((resolve, reject) => {
+        if(typeof message == 'string' ){
+            let req = http.request( encodeURI('http://www.aot.ru/cgi-bin/redirectd.py?port=17017&action=syntax&langua=Russian&query=' + message), (res) => {
+                var str = ""
+                if(res.statusCode == 200) { 
+                    res.on('data', data => {
+                        str += data
+                    })
+                    res.on('end', () => {
+                        try{
+                            resolve(JSON.parse(str))
+                        } catch(e) {
+                            resolve(null)
+                        }
+                    })
+                } else { 
+                    console.error("status code != 200") 
+                    resolve(null) 
+                }
+            })
+            req.end()
+        } else {
+            console.error("msg != string")
+            resolve(null)
+        }
+    })
 } 
 
 function roflMessage(msg) {
     return syntax(msg).then( stx =>{
-        return syntaxToRofl(stx)
+        if(stx != null) {
+            return syntaxToRofl(stx)
+        } else {
+            return null
+        }
     })
 }
 
@@ -74,18 +75,21 @@ function syntaxToRofl(syntax) {
 
 function kakKakat(message) {
     return syntax(message).then( stx => {
-        for(let elem of syntax[0]) {
-            for(let variant of elem.variant) {
-                for(let i in variant.units) {
-                    if(variant.units[i].homNo == 1) {
-                        if(elem.words[i].str.toLowerCase().includes('бот')) {
-                            return true
+        if(stx != null) {
+            for(let elem of stx[0]) {
+                for(let variant of elem.variants) {
+                    for(let i in variant.units) {
+                        if(variant.units[i].homNo == 1) {
+                            if(elem.words[i].str.toLowerCase().includes('бот')) {
+                                return true
+                            }
                         }
                     }
                 }
             }
-        }
-        return false
+            return false
+        } else return null
+
     })
 }
 
