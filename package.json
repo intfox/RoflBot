@@ -1,0 +1,16 @@
+{
+  "name": "roflbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "deployLocal": "scp rofl.js bot.js package.json analyse.js root@%MyServer%:~/roflBot/"
+  },
+  "author": "intfox",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-vk-bot-api": "^3.2.0"
+  }
+}
