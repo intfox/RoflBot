@@ -1,0 +1,19 @@
+name: bot deploy
+
+on: [push]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: SCP 
+      uses: appleboy/scp-action@v0.0.5
+      with: 
+        username: root
+        host: ${{ secrets.SERVER }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "*.js *.json"
+        target: "roflBot"
