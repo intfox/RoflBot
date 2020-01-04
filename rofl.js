@@ -1,9 +1,9 @@
 const http = require('http')
 
-function roflMessage(msg) {
+function syntax(message) {
     return new Promise((resolve, reject) => {
-        if(typeof msg == 'string' ){
-            let req = http.request( encodeURI('http://www.aot.ru/cgi-bin/redirectd.py?port=17017&action=syntax&langua=Russian&query=' + msg), (res) => {
+        if(typeof message == 'string' ){
+            let req = http.request( encodeURI('http://www.aot.ru/cgi-bin/redirectd.py?port=17017&action=syntax&langua=Russian&query=' + message), (res) => {
                 var str = ""
                 if(res.statusCode == 200) { 
                     res.on('data', data => {
@@ -11,7 +11,7 @@ function roflMessage(msg) {
                     })
                     res.on('end', () => {
                         try{
-                            resolve(syntaxToRofl(JSON.parse(str)))
+                            resolve(JSON.parse(str))
                         } catch(e) {
                             resolve(null)
                         }
@@ -27,7 +27,16 @@ function roflMessage(msg) {
             resolve(null)
         }
     })
+} 
 
+function roflMessage(msg) {
+    return syntax(msg).then( stx =>{
+        if(stx != null) {
+            return syntaxToRofl(stx)
+        } else {
+            return null
+        }
+    })
 }
 
 function syntaxToRofl(syntax) {
@@ -63,5 +72,27 @@ function syntaxToRofl(syntax) {
     if(result.length > 0) return result
     else return null
 }
+
+function kakKakat(message) {
+    return syntax(message).then( stx => {
+        if(stx != null) {
+            for(let elem of stx[0]) {
+                for(let variant of elem.variants) {
+                    for(let i in variant.units) {
+                        if(variant.units[i].homNo == 1) {
+                            if(elem.words[i].str.toLowerCase().includes('бот')) {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+            return false
+        } else return null
+
+    })
+}
+
+module.exports.kakKakat = kakKakat
 
 module.exports.roflMessage = roflMessage

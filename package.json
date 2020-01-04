@@ -5,7 +5,7 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "deployLocal": "scp rofl.js bot.js package.json analyse.js root@%MyServer%:~/roflBot/"
+    "deployLocal": "scp rofl.js bot.js package.json analyse.js config.json secrets.json root@%MyServer%:~/roflBot/"
   },
   "author": "intfox",
   "license": "ISC",

@@ -5,6 +5,7 @@ const rofl = require('./rofl')
 const analyse = require('./analyse')
 
 const secretConfig = require('./secrets.json')
+const config = require('./config.json')
 
 const app = express()
 const bot = new VkBot({
@@ -17,11 +18,10 @@ bot.event('message_new', (ctx) => {
     if(ctx.message.text.length > 0) {
         rofl.roflMessage(ctx.message.text).then(
             requestMessage => {
-                console.log(ctx.message.text, " => ")
+                console.log(ctx.message.text, " => ", new Set(requestMessage))
                 if(requestMessage != null) {
                     for(let reqMes of new Set(requestMessage)) {
-                        console.log("req message: ", reqMes)
-                        if(Math.random() < 0.1) {
+                        if(Math.random() < config.random_rate) {
                             ctx.reply(reqMes)
                         }
                     }
@@ -32,10 +32,12 @@ bot.event('message_new', (ctx) => {
             analyse.sentiments(ctx.message.text).then( score => {
                 console.log("score:", score, " text:", ctx.message.text)
                 if(score < 0.5) ctx.reply('...', 'photo-190470534_457239018')
+                else { rofl.kakKakat(ctx.message.text).then( k => { if(k) ctx.reply('а как какать') } ) }
             })
+            
         }
     }
-    if(ctx.mesage.action && ctx.message.action.type == "chat_invite_user") {
+    if(ctx.message.action && ctx.message.action.type == "chat_invite_user") {
         bot.execute('users.get', {
             user_ids: ctx.message.from_id,
             fields: 'domain'
