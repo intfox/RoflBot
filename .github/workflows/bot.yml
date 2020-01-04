@@ -1,6 +1,6 @@
 name: bot deploy
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   deploy:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v1
     - name: SCP 
       uses: appleboy/scp-action@v0.0.5
       with: 
