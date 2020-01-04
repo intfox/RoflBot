@@ -5,6 +5,7 @@ const rofl = require('./rofl')
 const analyse = require('./analyse')
 
 const secretConfig = require('./secrets.json')
+const config = require('./config.json')
 
 const app = express()
 const bot = new VkBot({
@@ -17,11 +18,10 @@ bot.event('message_new', (ctx) => {
     if(ctx.message.text.length > 0) {
         rofl.roflMessage(ctx.message.text).then(
             requestMessage => {
-                console.log(ctx.message.text, " => ")
+                console.log(ctx.message.text, " => ", new Set(requestMessage))
                 if(requestMessage != null) {
                     for(let reqMes of new Set(requestMessage)) {
-                        console.log("req message: ", reqMes)
-                        if(Math.random() < 0.1) {
+                        if(Math.random() < config.random_rate) {
                             ctx.reply(reqMes)
                         }
                     }
