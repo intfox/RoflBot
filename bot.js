@@ -33,6 +33,7 @@ bot.event('message_new', (ctx) => {
                 console.log("score:", score, " text:", ctx.message.text)
                 if(score < 0.5) ctx.reply('...', 'photo-190470534_457239018')
             })
+            kakKakat(ctx.message.text).then( k => { if(k) ctx.reply('а как какать') } )
         }
     }
     if(ctx.mesage.action && ctx.message.action.type == "chat_invite_user") {
