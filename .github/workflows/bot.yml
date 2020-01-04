@@ -15,5 +15,5 @@ jobs:
         username: root
         host: ${{ secrets.SERVER }}
         key: ${{ secrets.PRIVATE_KEY }}
-        source: "*.js *.json"
+        source: "*.js, *.json"
         target: "roflBot"
