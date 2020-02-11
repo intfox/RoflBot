@@ -73,26 +73,4 @@ function syntaxToRofl(syntax) {
     else return null
 }
 
-function kakKakat(message) {
-    return syntax(message).then( stx => {
-        if(stx != null) {
-            for(let elem of stx[0]) {
-                for(let variant of elem.variants) {
-                    for(let i in variant.units) {
-                        if(variant.units[i].homNo == 1) {
-                            if(elem.words[i].str.toLowerCase().includes('бот')) {
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-            return false
-        } else return null
-
-    })
-}
-
-module.exports.kakKakat = kakKakat
-
 module.exports.roflMessage = roflMessage
